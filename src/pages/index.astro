@@ -2,20 +2,18 @@
 import Card from "../components/Card.astro";
 import Header from "../components/Header.astro";
 import Layout from "../layouts/Layout.astro";
-import { Debug } from "astro:components";
 
 const allPosts = import.meta.glob("../content/*.md");
 const loadedPosts = await Promise.all(
 	Object.entries(allPosts).map(async ([path, importPost]) => {
 		const { frontmatter } = await importPost();
-		return { path, ...frontmatter };
+		return { ...frontmatter };
 	}),
 );
 ---
 
 <Layout title="Inicio">
 	<Header title="Astro Tips" />
-	<!-- <Debug {loadedPosts} /> -->
 	<ul role="list" class="link-card-grid">
 		{
 			loadedPosts.map((post) => (
