@@ -2,7 +2,7 @@
 export interface Props {
 	title: string;
 	time: string;
-	tags: string;
+	tags: string[];
 }
 const { title, time, tags } = Astro.props;
 ---
@@ -45,12 +45,16 @@ const { title, time, tags } = Astro.props;
 		</div>
 
 		<div class="sm:flex sm:items-end sm:justify-end">
-			<a
-				href="#"
-				class="block bg-yellow-300 px-5 py-3 text-center text-xs font-bold text-gray-900 uppercase transition hover:bg-yellow-400"
-			>
-				{tags}
-			</a>
+			{
+				tags.map((item) => {
+					<a
+						href="#"
+						class="block bg-yellow-300 px-5 py-3 text-center text-xs font-bold text-gray-900 uppercase transition hover:bg-yellow-400"
+					>
+						{item}
+					</a>;
+				})
+			}
 		</div>
 	</div>
 </article>

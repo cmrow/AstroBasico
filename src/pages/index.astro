@@ -2,12 +2,37 @@
 import Card from "../components/Card.astro";
 import Header from "../components/Header.astro";
 import Layout from "../layouts/Layout.astro";
+import { Debug } from "astro:components";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const allPosts = import.meta.glob("../content/*.md");
+const loadedPosts = await Promise.all(
+	Object.entries(allPosts).map(async ([path, importPost]) => {
+		const { frontmatter } = await importPost();
+		return { path, ...frontmatter };
+	}),
+);
 ---
 
-<Layout>
+<Layout title="Inicio">
 	<Header title="Astro Tips" />
-	<Card title="Hola Astro" time="2025" tags="javascript" />
+	<!-- <Debug {loadedPosts} /> -->
+	<ul role="list" class="link-card-grid">
+		{
+			loadedPosts.map((post) => (
+				<Card
+					title={post.title || "No Title"}
+					time={post.pubDate || new Date().toISOString()}
+					tags={post.tags || []}
+				/>
+			))
+		}
+	</ul>
 </Layout>
+<style>
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		gap: 2rem;
+		padding: 0;
+	}
+</style>
